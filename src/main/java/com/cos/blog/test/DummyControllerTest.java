@@ -3,6 +3,8 @@ package com.cos.blog.test;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.model.RoleType;
@@ -73,7 +77,33 @@ public class DummyControllerTest {
 		List<User> users = pagingUser.getContent();
 		return users;
 	}
-	
+	//save : id전달x → insert
+	//save : id 전달o, 해당 id 데이터o → update
+	//save : id전달o,  해당 id 데이터x → insert
+	@Transactional //함수 종료시 자동  commit됨
+	@PutMapping("/dummy/user/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {
+		//@RequestBody : json데이터를 요청->Java Object로 변환해서 받음(MessageConverter의 Json라이브러리가 변화해서 받아줌)
+		System.out.println("id : "+id);
+		System.out.println("password : "+requestUser.getPassword());
+		System.out.println("email : "+ requestUser.getEmail());
+		
+		//영속화 시작
+		User user = userRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("수정에 실패하였습니다.");
+				});
+		//영속화 종료
+		//변경 감지
+		user.setPassword(requestUser.getPassword());
+		user.setEmail(requestUser.getEmail());
+		//변경 감지 끝
+		
+		//update 시 save를 쓰고 싶을 때는 @Transactional을 붙이면 x
+		//userRepository.save(user);
+		
+		//더티체킹
+		return null;
+	}
 	
 		
-	}
+}
