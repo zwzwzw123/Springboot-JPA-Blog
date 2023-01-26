@@ -1,8 +1,13 @@
 package com.cos.blog.test;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.UserRepository;
+
+import net.bytebuddy.asm.Advice.OffsetMapping.Sort;
 
 //RestController : html파일이 아닌 data를 return해줌
 @RestController
@@ -51,5 +58,22 @@ public class DummyControllerTest {
 		userRepository.save(user);
 		return "회원가입이 완료되었습니다.";
 	}
+	
+	@GetMapping("/dummy/users")
+	public List<User> list(){
+		return userRepository.findAll();
+	}
+	
+	//한페이지당 2건의 데이터를 리턴 받을 것
+	//첫번째 페이지 : http://localhost:8000/blog/dummy/user?page=0
+	@GetMapping("/dummy/user")
+	public List<User> pageList(@PageableDefault(size=2, sort="id", direction = Direction.DESC ) org.springframework.data.domain.Pageable pageable){
+		Page<User> pagingUser = userRepository.findAll(pageable);
+		//페이징의 부가적인 정보를 보고싶지 않다면 .getContent()
+		List<User> users = pagingUser.getContent();
+		return users;
+	}
+	
+	
 		
 	}
