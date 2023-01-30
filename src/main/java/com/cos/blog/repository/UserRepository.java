@@ -11,6 +11,8 @@ import com.cos.blog.model.User;
 public interface UserRepository extends JpaRepository<User, Integer>{
 	//JPA Naming전략
 	//select * from user where username = ? and password =?;
-	User findByUsernameAndPassword(String username, String password);
+	/* User findByUsernameAndPassword(String username, String password); */
+	
+	
 
 }

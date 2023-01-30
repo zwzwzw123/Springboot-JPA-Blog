@@ -27,9 +27,11 @@ public class UserService {
 		return -1;
 	}
 
-	@Transactional(readOnly = true) //Select할때 트랜젝션 시작, 서비스 정료시 트랜젝션 종료(정합성 유지 가능)
-	public User 로그인(User user) {
-		return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-	}
+	/*
+	 * @Transactional(readOnly = true) //Select할때 트랜젝션 시작, 서비스 정료시 트랜젝션 종료(정합성 유지
+	 * 가능) public User 로그인(User user) { return
+	 * userRepository.findByUsernameAndPassword(user.getUsername(),
+	 * user.getPassword()); }
+	 */
 
 }
