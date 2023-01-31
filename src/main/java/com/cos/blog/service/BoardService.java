@@ -32,4 +32,12 @@ public class BoardService {
 	}
 
 
+	public Board 글상세보기(int id) {
+		return boardRepository.findById(id)
+				.orElseThrow(()->{
+					return new IllegalArgumentException("글상세보기 실패 : 글 아이디를 찾을 수 없습니다.");
+				});
+	}
+
+
 }
