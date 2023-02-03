@@ -6,6 +6,9 @@ let index ={
 		/*	$("#btn-login").on("click", ()=>{ //function(){}, ()=>{} this를 바인딩하기 위해
 				this.login();
 			});*/
+			$("#btn-update").on("click", ()=>{ //function(){}, ()=>{} this를 바인딩하기 위해
+				this.update();
+			});
 		},
 
 	save: function(){
@@ -58,6 +61,28 @@ let index ={
 			alert(JSON.stringify(error));
 		});
 	}*/
+	
+	update: function(){
+		let data={
+				id: $("#id").val(),
+				username: $("#username").val(),
+				email : $("#email").val(),
+				password: $("#password").val()
+		};
+		
+		$.ajax({
+			type:"PUT",
+			url:"/user",
+			data:JSON.stringify(data), 
+			contentType:"application/json; charset=uft-8"
+		}).done(function(resp){
+			alert("회원수정이 완료되었습니다");
+			location.href="/";
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+		});
+	},
+	
 }
 
 index.init();
