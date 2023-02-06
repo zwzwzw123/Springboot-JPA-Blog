@@ -75,10 +75,7 @@ let index ={
 				boardId: $("#boardId").val(),
 				content : $("#reply-content").val()
 		};
-		
-		
 		console.log(data);
-		
 		$.ajax({
 			type:"POST",
 			url:`/api/board/${data.boardId}/reply`,
@@ -90,7 +87,20 @@ let index ={
 		}).fail(function(error){
 			alert(JSON.stringify(error));
 		});
-	}
+	},
+	
+	replyDelete: function(boardId, replyId){
+		$.ajax({
+			type:"DELETE",
+			url:`/api/board/${boardId}/reply/${replyId}`,
+			dataType:"json", 
+		}).done(function(resp){
+			alert("댓글 삭제가 완료되었습니다");
+			location.href=`/board/${boardId}`;
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+		});
+	},
 	
 }
 
