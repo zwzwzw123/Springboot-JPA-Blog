@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +49,8 @@ public class Board {
 	private User user;
 	
 	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER) //mappedBy 연관관계의 주인이 아님(FK가아님, DB의 컬럼 생성x)
-	private List<Reply> reply;
+	@JsonIgnoreProperties("{board}")
+	private List<Reply> replys;
 	
 	@CreationTimestamp
 	private Timestamp createDate;
