@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
+import com.cos.blog.model.dto.ReplySaveRequestDto;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
+import com.cos.blog.repository.UserRepository;
 
 @Service
 public class BoardService {
@@ -21,6 +23,9 @@ public class BoardService {
 	
 	@Autowired
 	private ReplyRepository replyRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 
 	//서비스가 성공하면 commit, 실피하면 rollback
@@ -61,16 +66,25 @@ public class BoardService {
 	}
 
 	@Transactional
-	public void 댓글쓰기(User user, int boardId, Reply requestReply) {
-		Board board = boardRepository.findById(boardId)
+	public void 댓글쓰기(ReplySaveRequestDto replysaveRequestDto) {
+		
+		User user =userRepository.findById(replysaveRequestDto.getUserId())
+				.orElseThrow(()->{
+					return new IllegalArgumentException("댓글 쓰기 실패 : 유저id를 찾을 수 없습니다.");
+				});
+		
+		Board board = boardRepository.findById(replysaveRequestDto.getBoardId())
 				.orElseThrow(()->{
 					return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다.");
 				});
 		
-		requestReply.setUser(user);
-		requestReply.setBoard(board);
+		Reply reply = Reply.builder()
+				.user(user)
+				.board(board)
+				.content(replysaveRequestDto.getContent())
+				.build();
 		
-		replyRepository.save(requestReply);
+		replyRepository.save(reply);
 	}
 
 
