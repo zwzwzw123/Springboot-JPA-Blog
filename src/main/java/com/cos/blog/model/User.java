@@ -42,6 +42,8 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private RoleType role; //나중에Enum으로 변경 할 것   ADMIN, USER, MANAGER
 	
+	private String oauth;//kakao,google
+	
 	@CreationTimestamp //시간이 자동으로 입력됨
 	private Timestamp createDate;
 }
